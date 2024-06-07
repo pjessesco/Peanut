@@ -10,13 +10,13 @@
 
 #include "longmatstr.h"
 
-#define SUM_STR (mat1+mat1)
-#define MAT_STR NUMSTR_100, NUMSTR_100
+#define SUM_STR (mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1+mat1)
+#define MAT_STR NUMSTR_100, NUMSTR_100, NUMSTR_100, NUMSTR_100
 
 int main() {
     constexpr int row = 20;
-    constexpr int col = 10;
-    int iter = 1000000;
+    constexpr int col = 20;
+    int iter = 100000;
     // Peanut benchmarking
     {
         Peanut::Matrix<int, row, col> mat1{MAT_STR};
@@ -24,7 +24,7 @@ int main() {
 
         auto time1 = std::chrono::high_resolution_clock::now();
         for(int i=0;i<iter;i++){
-            mat = (SUM_STR).eval();
+            mat = (SUM_STR);
         }
         auto time2 = std::chrono::high_resolution_clock::now();
 

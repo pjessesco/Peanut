@@ -42,6 +42,7 @@ namespace Peanut::Impl {
         requires is_equal_size_mat_v<E1, E2>
     struct MatrixSum : public MatrixExpr<MatrixSum<E1, E2>> {
         using Type = typename E1::Type;
+
         MatrixSum(const E1 &x, const E2 &y) : x{x}, y{y} {}
 
         // Static polymorphism implementation of MatrixExpr

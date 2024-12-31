@@ -44,15 +44,23 @@ namespace Peanut::Impl {
         requires(E1::Col == E2::Row)
     struct MatrixMult : public MatrixExpr<MatrixMult<E1, E2>> {
         using Type = typename E1::Type;
-        MatrixMult(const E1 &_x, const E2 &_y) : x_eval{_x}, y_eval{_y} {}
+        MatrixMult(const E1 &_x, const E2 &_y) {
+            const Matrix<Type, E1::Row, E1::Col> x_eval = _x;
+            const Matrix<Type, E2::Row, E2::Col> y_eval = _y;
+            evalVal = Matrix<Type, E1::Row, E2::Col>::zeros();
+
+            for (int i = 0; i < E1::Row; i++) {
+                for (int j = 0; j < E2::Col; j++) {
+                    for (int k = 0; k < E1::Col; k++) {
+                        evalVal.elem(i, j) += x_eval.elem(i, k) * y_eval.elem(k, j);
+                    }
+                }
+            }
+        }
 
         // Static polymorphism implementation of MatrixExpr
         INLINE auto elem(Index r, Index c) const {
-            auto ret = x_eval.elem(r, 0) * y_eval.elem(0, c);
-            for (Index i = 1; i < E1::Col; i++) {
-                ret += x_eval.elem(r, i) * y_eval.elem(i, c);
-            }
-            return ret;
+            return evalVal.elem(r, c);
         }
 
         static constexpr Index Row = E1::Row;
@@ -62,9 +70,7 @@ namespace Peanut::Impl {
             return Matrix<Type, Row, Col>(*this);
         }
 
-        // Specify member type as Matrix for evaluation
-        const Matrix<Type, E1::Row, E1::Col> x_eval;
-        const Matrix<Type, E2::Row, E2::Col> y_eval;
+        Matrix<Type, E1::Row, E2::Col> evalVal;
     };
 
 }
